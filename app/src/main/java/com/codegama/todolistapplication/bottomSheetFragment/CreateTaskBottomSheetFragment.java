@@ -4,45 +4,36 @@ import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.SystemClock;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.core.app.NotificationCompat;
 
 import com.codegama.todolistapplication.R;
-import com.codegama.todolistapplication.activity.AlarmActivity;
 import com.codegama.todolistapplication.activity.MainActivity;
 import com.codegama.todolistapplication.broadcastReceiver.AlarmBroadcastReceiver;
 import com.codegama.todolistapplication.database.DatabaseClient;
+import com.codegama.todolistapplication.helper.Helper;
 import com.codegama.todolistapplication.model.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.zubair.alarmmanager.builder.AlarmBuilder;
-import com.zubair.alarmmanager.enums.AlarmType;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,11 +52,13 @@ public class CreateTaskBottomSheetFragment extends BottomSheetDialogFragment {
     EditText taskDate;
     @BindView(R.id.taskTime)
     EditText taskTime;
-    @BindView(R.id.taskEvent)
-    EditText taskEvent;
+    @BindView(R.id.priority)
+    Spinner priorityEvent;
     @BindView(R.id.addTask)
     Button addTask;
-    int taskId;
+    @BindView(R.id.spinner)
+    Spinner spinner;
+    int taskId,repeatPeriod;
     boolean isEdit;
     Task task;
     int mYear, mMonth, mDay;
@@ -75,7 +68,10 @@ public class CreateTaskBottomSheetFragment extends BottomSheetDialogFragment {
     TimePickerDialog timePickerDialog;
     DatePickerDialog datePickerDialog;
     MainActivity activity;
-    public static int count = 0;
+    //public static int count = 0;
+    int req_id ;
+    Intent alarmIntent;
+    PendingIntent pendingIntent;
 
     private BottomSheetBehavior.BottomSheetCallback mBottomSheetBehaviorCallback = new BottomSheetBehavior.BottomSheetCallback() {
 
@@ -115,6 +111,8 @@ public class CreateTaskBottomSheetFragment extends BottomSheetDialogFragment {
             showTaskFromId();
         }
 
+        setSpinnerView();
+
         taskDate.setOnTouchListener((view, motionEvent) -> {
             if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 final Calendar c = Calendar.getInstance();
@@ -133,6 +131,10 @@ public class CreateTaskBottomSheetFragment extends BottomSheetDialogFragment {
         });
 
         taskTime.setOnTouchListener((view, motionEvent) -> {
+
+            // Get Current Time Format
+            boolean is24HourView = DateFormat.is24HourFormat(getContext());
+
             if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 // Get Current Time
                 final Calendar c = Calendar.getInstance();
@@ -141,14 +143,29 @@ public class CreateTaskBottomSheetFragment extends BottomSheetDialogFragment {
 
                 // Launch Time Picker Dialog
                 timePickerDialog = new TimePickerDialog(getActivity(),
-                        (view12, hourOfDay, minute) -> {
+                        (view24, hourOfDay, minute) -> {
                             taskTime.setText(hourOfDay + ":" + minute);
                             timePickerDialog.dismiss();
-                        }, mHour, mMinute, false);
+                        }, mHour, mMinute, is24HourView);
                 timePickerDialog.show();
             }
             return true;
         });
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+               repeatPeriod =  Helper.getRepeatPeriodIdx (spinner.getSelectedItem().toString());
+                //Toast.makeText(getContext(), Helper.setNextTime(spinner.getSelectedItem().toString(), taskDate.getText().toString(), taskTime.getText().toString()) ,Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
     }
 
     public boolean validateFields() {
@@ -166,10 +183,6 @@ public class CreateTaskBottomSheetFragment extends BottomSheetDialogFragment {
         }
         else if(taskTime.getText().toString().equalsIgnoreCase("")) {
             Toast.makeText(activity, "Please enter time", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        else if(taskEvent.getText().toString().equalsIgnoreCase("")) {
-            Toast.makeText(activity, "Please enter an event", Toast.LENGTH_SHORT).show();
             return false;
         }
         else {
@@ -192,7 +205,8 @@ public class CreateTaskBottomSheetFragment extends BottomSheetDialogFragment {
                 createTask.setTaskDescrption(addTaskDescription.getText().toString());
                 createTask.setDate(taskDate.getText().toString());
                 createTask.setLastAlarm(taskTime.getText().toString());
-                createTask.setEvent(taskEvent.getText().toString());
+                createTask.setTaskPriority(priorityEvent.getSelectedItemPosition());
+                createTask.setRepeatPeriod(repeatPeriod);
 
                 if (!isEdit)
                     DatabaseClient.getInstance(getActivity()).getAppDatabase()
@@ -205,8 +219,13 @@ public class CreateTaskBottomSheetFragment extends BottomSheetDialogFragment {
                                     addTaskDescription.getText().toString(),
                                     taskDate.getText().toString(),
                                     taskTime.getText().toString(),
-                                    taskEvent.getText().toString());
+                                    priorityEvent.getSelectedItemPosition(),
+                                    repeatPeriod );
 
+                //TODO: Delete tis log body
+                req_id = DatabaseClient.getInstance(getActivity()).getAppDatabase()
+                        .dataBaseAction()
+                        .getLastItemId();
                 return null;
             }
 
@@ -228,6 +247,8 @@ public class CreateTaskBottomSheetFragment extends BottomSheetDialogFragment {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void createAnAlarm() {
+        //TODO: Delete tis log body
+        //Log.i("alarming", taskId + " - " +addTaskTitle.getText() + " - "+taskDate.getText()+ " - "+taskTime.getText());
         try {
             String[] items1 = taskDate.getText().toString().split("-");
             String dd = items1[0];
@@ -238,8 +259,8 @@ public class CreateTaskBottomSheetFragment extends BottomSheetDialogFragment {
             String hour = itemTime[0];
             String min = itemTime[1];
 
-            Calendar cur_cal = new GregorianCalendar();
-            cur_cal.setTimeInMillis(System.currentTimeMillis());
+            //Calendar cur_cal = new GregorianCalendar();
+            //cur_cal.setTimeInMillis(System.currentTimeMillis());
 
             Calendar cal = new GregorianCalendar();
             cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour));
@@ -248,35 +269,30 @@ public class CreateTaskBottomSheetFragment extends BottomSheetDialogFragment {
             cal.set(Calendar.MILLISECOND, 0);
             cal.set(Calendar.DATE, Integer.parseInt(dd));
 
-            Intent alarmIntent = new Intent(activity, AlarmBroadcastReceiver.class);
+            alarmIntent = new Intent(activity, AlarmBroadcastReceiver.class);
+            alarmIntent.putExtra("ID", req_id);
             alarmIntent.putExtra("TITLE", addTaskTitle.getText().toString());
             alarmIntent.putExtra("DESC", addTaskDescription.getText().toString());
             alarmIntent.putExtra("DATE", taskDate.getText().toString());
             alarmIntent.putExtra("TIME", taskTime.getText().toString());
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(activity,count, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pendingIntent);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pendingIntent);
-                } else {
-                    alarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pendingIntent);
-                }
-                count ++;
+            alarmIntent.putExtra("PER", spinner.getSelectedItem().toString());
+            alarmIntent.putExtra("IMP", priorityEvent.getSelectedItem().toString());
+            pendingIntent = PendingIntent.getBroadcast(activity, req_id, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                    PendingIntent intent = PendingIntent.getBroadcast(activity, count, alarmIntent, 0);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis() - 600000, intent);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                            alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis() - 600000, intent);
-                        } else {
-                            alarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis() - 600000, intent);
-                        }
-                    }
-                count ++;
+            //TODO: Delete tis log body
+            //Log.i("alarming***", this.taskId + "- SDK : " + Build.VERSION.SDK_INT + " - " + cal.getTimeInMillis()+ " - req_id: " +req_id+ " - period: " +spinner.getSelectedItem().toString());
+
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (spinner.getSelectedItemPosition() == 0)
+                    alarmManager.setExact (AlarmManager.RTC_WAKEUP, cal.getTimeInMillis()-10000,  pendingIntent);
+                else
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis()-10000, Helper.getRepeatPeriod(spinner.getSelectedItemPosition()), pendingIntent);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     private void showTaskFromId() {
@@ -304,10 +320,23 @@ public class CreateTaskBottomSheetFragment extends BottomSheetDialogFragment {
         addTaskDescription.setText(task.getTaskDescrption());
         taskDate.setText(task.getDate());
         taskTime.setText(task.getLastAlarm());
-        taskEvent.setText(task.getEvent());
+        priorityEvent.setSelection(task.getTaskPriority());
+        spinner.setSelection(task.getRepeatPeriod());
     }
 
     public interface setRefreshListener {
         void refresh();
+    }
+
+    void setSpinnerView(){
+        String[] timeVal = {"Once","Fifteen minutes","Half hour","Hourly","Half day","Daily","Weekly"};
+        ArrayAdapter<CharSequence> periodAdapter = new ArrayAdapter<CharSequence>(getActivity(), R.layout.spinner_text, timeVal );
+        periodAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown);
+        spinner.setAdapter(periodAdapter);
+
+        String[] priority = {"Low","Medium","High"};
+        ArrayAdapter<CharSequence> priorityAdapter = new ArrayAdapter<>(getActivity(), R.layout.spinner_text, priority);
+        priorityAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown);
+        priorityEvent.setAdapter(priorityAdapter);
     }
 }

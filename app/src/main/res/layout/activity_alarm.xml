@@ -4,55 +4,149 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@drawable/bgx"
     android:orientation="vertical"
     tools:context=".activity.AlarmActivity">
 
     <ImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         android:id="@+id/imageView"
-        android:layout_gravity="center"
-        android:layout_marginTop="80dp"/>
+        android:layout_gravity="top|center"
+        android:layout_marginBottom="25dp"
+        android:layout_marginTop="20dp"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
-        android:layout_marginTop="50dp"
-        android:layout_gravity="center"
-        android:id="@+id/title"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:layout_gravity="center"
-        android:textColor="@android:color/black"
-        android:layout_marginTop="5dp"
-        android:id="@+id/description"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:layout_gravity="center"
-        android:layout_marginTop="15dp"
-        android:textColor="@android:color/black"
-        android:id="@+id/timeAndData"/>
-
-    <Button
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/closeButton"
-        android:textSize="14sp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/btn_background"
-        android:textColor="@color/colorPrimary"
-        android:text="Close"
+        android:layout_margin="10dp"
+        android:layout_marginTop="25dp"
+        android:orientation="vertical"
+        android:background="@drawable/btn_background2">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="title of your note"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:id="@+id/title"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:text="title of your description"
+            android:layout_gravity="center"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="10dp"
+            android:id="@+id/description"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="the time and date of your note"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="10dp"
+            android:textColor="@android:color/black"
+            android:id="@+id/timeAndData"/>
+    </LinearLayout>
+<!--
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/completeButton"
+        android:textSize="24sp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/ic_arrow"
+        android:textColor="@color/c333366"
+        android:text="   Complete"
         android:textAllCaps="false"/>
+-->
+    <com.ebanx.swipebtn.SwipeButton
+        android:id="@+id/completeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:inner_text="SWIPE TO COMPLETE"
+        app:inner_text_color="@android:color/white"
+        app:inner_text_size="16sp"
+        app:inner_text_top_padding="18dp"
+        app:inner_text_left_padding="58dp"
+        app:inner_text_bottom_padding="18dp"
+        app:inner_text_background="@drawable/shape_rounded"
+        app:button_image_height="60dp"
+        app:button_image_width="80dp"
+        app:button_image_disabled="@drawable/ic_uncompleted"
+        app:button_image_enabled="@drawable/ic_completed"
+        app:button_left_padding="10dp"
+        app:button_right_padding="10dp"
+        app:button_top_padding="10dp"
+        app:button_bottom_padding="10dp"
+        app:button_background="@drawable/shape_button"
+        app:initial_state="disabled"
+        app:has_activate_state="true"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal">
+        <Button
+            android:layout_weight="80"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/decreaseButton"
+            android:textSize="24sp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/ic_period"
+            android:textColor="@color/c333366"
+            android:text="- 5"
+            android:textAllCaps="false"/>
+        <Button
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="75dp"
+            android:minHeight="75dp"
+            android:id="@+id/soozeButton"
+            android:textSize="18sp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/ic_snoze"
+            android:textColor="@color/c333366"
+            android:adjustViewBounds="true"
+            android:layout_centerInParent="true"
+            android:textAllCaps="false"/>
+        <Button
+            android:layout_weight="80"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/increaseButton"
+            android:textSize="24sp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/ic_period_reverse"
+            android:textColor="@color/c333366"
+            android:text="+ 5"
+            android:textAllCaps="false"/>
+
+    </LinearLayout>
 
 </LinearLayout>

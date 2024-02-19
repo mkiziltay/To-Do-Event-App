@@ -6,7 +6,7 @@
     app:cardUseCompatPadding="true"
     app:cardElevation="5dp"
     app:cardCornerRadius="10dp"
-    app:contentPadding="10dp"
+    app:contentPadding="5dp"
     android:layout_height="150dp">
 
     <LinearLayout
@@ -16,10 +16,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_marginRight="5dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:layout_marginLeft="5dp"
             android:orientation="vertical">
 
@@ -39,7 +39,7 @@
                 android:id="@+id/date"
                 android:text="18"
                 android:layout_gravity="center"
-                android:textSize="24sp"
+                android:textSize="28sp"
                 android:textColor="@color/colorAccent" />
 
             <TextView
@@ -51,6 +51,17 @@
                 android:textSize="18sp"
                 android:textColor="@android:color/black"
                 android:alpha="0.5"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                tools:text="20:00"
+                android:singleLine="true"
+                android:alpha="0.5"
+                android:id="@+id/time"
+                android:textSize="12sp"
+                android:layout_marginTop="5dp"
+                android:textColor="@android:color/black"/>
 
         </LinearLayout>
 
@@ -86,6 +97,7 @@
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:layout_marginLeft="10dp"
                     android:id="@+id/options"
                     android:background="@drawable/more"/>
 
@@ -100,7 +112,7 @@
                 android:id="@+id/description"
                 android:textSize="14sp"
                 android:textColor="@android:color/black"/>
-
+<!--
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -109,7 +121,7 @@
                 android:alpha="0.5"
                 android:id="@+id/time"
                 android:textSize="12sp"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black"/>-->
 
             <TextView
                 android:layout_width="wrap_content"
@@ -124,6 +136,19 @@
                 android:paddingRight="10dp"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Daily"
+                android:textSize="12sp"
+                android:id="@+id/period"
+                android:layout_gravity="right"
+                android:textColor="@color/colorAccent"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="1dp" />
 
         </LinearLayout>
 

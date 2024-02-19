@@ -87,68 +87,123 @@
         android:id="@+id/addTaskDescription"
         tools:ignore="MissingPrefix" />
 
-    <TextView
-        android:layout_marginLeft="3dp"
-        fontPath="fonts/nunito_light.ttf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="Task date"
-        tools:ignore="MissingPrefix" />
-
-    <EditText
-        android:textSize="14sp"
-        fontPath="fonts/nunito_light.ttf"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:singleLine="true"
-        android:background="@drawable/btn_border"
-        android:padding="10dp"
-        android:id="@+id/taskDate"
-        tools:ignore="MissingPrefix" />
+        android:orientation="horizontal">
 
-    <TextView
-        android:layout_marginLeft="3dp"
-        fontPath="fonts/nunito_light.ttf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="Task time"
-        tools:ignore="MissingPrefix" />
+        <LinearLayout
+            android:layout_weight="4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_marginLeft="3dp"
+                fontPath="fonts/nunito_light.ttf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="Task date"
+                tools:ignore="MissingPrefix" />
 
-    <EditText
-        android:textSize="14sp"
-        fontPath="fonts/nunito_light.ttf"
+            <EditText
+                android:textSize="14sp"
+                fontPath="fonts/nunito_light.ttf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:singleLine="true"
+                android:background="@drawable/btn_border"
+                android:padding="10dp"
+                android:id="@+id/taskDate"
+                tools:ignore="MissingPrefix" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_weight="2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_marginLeft="3dp"
+                fontPath="fonts/nunito_light.ttf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="Task time"
+                tools:ignore="MissingPrefix" />
+
+            <EditText
+                android:textSize="14sp"
+                fontPath="fonts/nunito_light.ttf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:singleLine="true"
+                android:background="@drawable/btn_border"
+                android:padding="10dp"
+                android:id="@+id/taskTime"
+                tools:ignore="MissingPrefix" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:singleLine="true"
-        android:background="@drawable/btn_border"
-        android:padding="10dp"
-        android:id="@+id/taskTime"
-        tools:ignore="MissingPrefix" />
+        android:orientation="horizontal">
 
-    <TextView
-        android:layout_marginLeft="3dp"
-        fontPath="fonts/nunito_light.ttf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="Add an event"
-        tools:ignore="MissingPrefix" />
+        <LinearLayout
+            android:layout_weight="4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_marginLeft="3dp"
+                fontPath="fonts/nunito_light.ttf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="Add an event"
+                tools:ignore="MissingPrefix" />
 
-    <EditText
-        android:textSize="14sp"
-        fontPath="fonts/nunito_light.ttf"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:singleLine="true"
-        android:background="@drawable/btn_border"
-        android:padding="10dp"
-        android:id="@+id/taskEvent"
-        tools:ignore="MissingPrefix" />
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/priority"
+                android:spinnerMode="dropdown"
+                android:background="@drawable/btn_border"
+                android:layout_marginTop="5dp"
+                android:padding="10dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_weight="2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_marginLeft="3dp"
+                fontPath="fonts/nunito_light.ttf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="Repeat Period"
+                tools:ignore="MissingPrefix" />
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner"
+                android:spinnerMode="dropdown"
+                android:background="@drawable/btn_border"
+                android:layout_marginTop="5dp"
+                android:padding="10dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
 
     <Button
         android:layout_width="match_parent"

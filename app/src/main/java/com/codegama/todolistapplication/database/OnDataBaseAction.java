@@ -26,9 +26,17 @@ public interface OnDataBaseAction {
     @Query("SELECT * FROM Task WHERE taskId = :taskId")
     Task selectDataFromAnId(int taskId);
 
+    //@Query("SELECT customerId FROM tb_customer ORDER BY customerId DESC LIMIT 1")
+    @Query("SELECT taskId FROM Task ORDER BY taskId DESC LIMIT 1")
+    int getLastItemId();
+
     @Query("UPDATE Task SET taskTitle = :taskTitle, taskDescription = :taskDescription, date = :taskDate, " +
-            "lastAlarm = :taskTime, event = :taskEvent WHERE taskId = :taskId")
+            "lastAlarm = :taskTime, precedence = :taskPriority, repeat = :repeatPeriod WHERE taskId = :taskId")
     void updateAnExistingRow(int taskId, String taskTitle, String taskDescription , String taskDate, String taskTime,
-                            String taskEvent);
+                             int taskPriority,int repeatPeriod);
+
+    @Query("UPDATE Task SET date = :taskDate, " +
+            "lastAlarm = :taskTime WHERE taskId = :taskId")
+    void updateAnExistingTaskTime(int taskId, String taskDate, String taskTime);
 
 }

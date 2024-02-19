@@ -1,15 +1,24 @@
 package com.codegama.todolistapplication.activity;
 
 import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,8 +37,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseActivity implements CreateTaskBottomSheetFragment.setRefreshListener {
+public class MainActivity extends AppCompatActivity implements CreateTaskBottomSheetFragment.setRefreshListener {
 
+    private static final int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 1010;
     @BindView(R.id.taskRecycler)
     RecyclerView taskRecycler;
     @BindView(R.id.addTask)
@@ -65,12 +75,23 @@ public class MainActivity extends BaseActivity implements CreateTaskBottomSheetF
             ShowCalendarViewBottomSheet showCalendarViewBottomSheet = new ShowCalendarViewBottomSheet();
             showCalendarViewBottomSheet.show(getSupportFragmentManager(), showCalendarViewBottomSheet.getTag());
         });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ignoreBatteryOptimization();
+            requestOverlayPermission();
+        }
     }
 
     public void setUpAdapter() {
         taskAdapter = new TaskAdapter(this, tasks, this);
         taskRecycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         taskRecycler.setAdapter(taskAdapter);
+
+        //TODO: Delete tis for body
+        for (int i=0;i<tasks.size();i++){
+            //TODO: Delete tis log body
+            Log.i("alarming***ID", tasks.get(i).getTaskId()+" is id" );
+        }
     }
 
     private void getSavedTasks() {
@@ -96,6 +117,29 @@ public class MainActivity extends BaseActivity implements CreateTaskBottomSheetF
 
         GetSavedTasks savedTasks = new GetSavedTasks();
         savedTasks.execute();
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private void ignoreBatteryOptimization() {
+        Intent intent = new Intent();
+        String packageName = this.getPackageName();
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+            intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+            intent.setData(Uri.parse("package:" + packageName));
+            startActivity(intent);
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private void requestOverlayPermission() {
+            if (!Settings.canDrawOverlays(this)) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + this.getPackageName()));
+                startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
+            } else {
+                //Permission Granted-System will work
+            }
     }
 
     @Override

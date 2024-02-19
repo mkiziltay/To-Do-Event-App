@@ -19,14 +19,16 @@ public class Task implements Serializable {
     String taskDescrption;
     @ColumnInfo(name = "isComplete")
     boolean isComplete;
-    @ColumnInfo(name = "firstAlarmTime")
-    String firstAlarmTime;
-    @ColumnInfo(name = "secondAlarmTime")
-    String secondAlarmTime;
+    //@ColumnInfo(name = "firstAlarmTime")
+    //String firstAlarmTime;
+    //@ColumnInfo(name = "secondAlarmTime")
+    //String secondAlarmTime;
     @ColumnInfo(name = "lastAlarm")
-    String lastAlarm;
-    @ColumnInfo(name = "event")
-    String event;
+    private String lastAlarm;
+    @ColumnInfo(name = "precedence")
+    private int taskPriority;
+    @ColumnInfo(name = "repeat")
+    int repeatPeriod;
 
     public Task() {
 
@@ -36,41 +38,22 @@ public class Task implements Serializable {
         return isComplete;
     }
 
-    public String getEvent() {
-        return event;
-    }
-
-    public void setEvent(String event) {
-        this.event = event;
-    }
 
     public void setComplete(boolean complete) {
         isComplete = complete;
     }
 
-    public String getFirstAlarmTime() {
-        return firstAlarmTime;
-    }
+    //public String getFirstAlarmTime() {return firstAlarmTime;}
 
-    public void setFirstAlarmTime(String firstAlarmTime) {
-        this.firstAlarmTime = firstAlarmTime;
-    }
+    //public void setFirstAlarmTime(String firstAlarmTime) {this.firstAlarmTime = firstAlarmTime;}
 
-    public String getSecondAlarmTime() {
-        return secondAlarmTime;
-    }
+    //public String getSecondAlarmTime() {return secondAlarmTime;}
 
-    public void setSecondAlarmTime(String secondAlarmTime) {
-        this.secondAlarmTime = secondAlarmTime;
-    }
+    //public void setSecondAlarmTime(String secondAlarmTime) {this.secondAlarmTime = secondAlarmTime;}
 
-    public String getLastAlarm() {
-        return lastAlarm;
-    }
+    public String getLastAlarm() {return lastAlarm;}
 
-    public void setLastAlarm(String lastAlarm) {
-        this.lastAlarm = lastAlarm;
-    }
+    public void setLastAlarm(String lastAlarm) {this.lastAlarm = lastAlarm;}
 
     public int getTaskId() {
         return taskId;
@@ -102,5 +85,21 @@ public class Task implements Serializable {
 
     public void setTaskDescrption(String taskDescrption) {
         this.taskDescrption = taskDescrption;
+    }
+
+    public int getRepeatPeriod() {
+        return repeatPeriod;
+    }
+
+    public void setRepeatPeriod(int repeatPeriod) {
+        this.repeatPeriod = repeatPeriod;
+    }
+
+    public int getTaskPriority() {
+        return taskPriority;
+    }
+
+    public void setTaskPriority(int taskPriority) {
+        this.taskPriority = taskPriority;
     }
 }

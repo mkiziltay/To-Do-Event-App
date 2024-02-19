@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import com.codegama.todolistapplication.R;
 import com.codegama.todolistapplication.activity.MainActivity;
 import com.codegama.todolistapplication.bottomSheetFragment.CreateTaskBottomSheetFragment;
 import com.codegama.todolistapplication.database.DatabaseClient;
+import com.codegama.todolistapplication.helper.Helper;
 import com.codegama.todolistapplication.model.Task;
 
 import java.text.SimpleDateFormat;
@@ -64,7 +66,20 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.description.setText(task.getTaskDescrption());
         holder.time.setText(task.getLastAlarm());
         holder.status.setText(task.isComplete() ? "COMPLETED" : "UPCOMING");
+        holder.period.setText(Helper.getRepeatPeriodString(task.getRepeatPeriod()));
         holder.options.setOnClickListener(view -> showPopUpMenu(view, position));
+        //TODO: delete this func
+        holder.period.setOnClickListener(new View.OnClickListener() {
+                                             @Override
+                                             public void onClick(View view) {
+                                                 Log.i("alarming", "adapter : " + task.getLastAlarm());
+                                                 Log.i("alarming", "old date : " + task.getDate()+ " - "+task.getLastAlarm());
+                                                 Log.i("alarming", "next date : " + Helper.setNextTime(Helper.getRepeatPeriodString (task.getRepeatPeriod()),task.getDate(), task.getLastAlarm()));
+                                             }
+                                         }
+
+                );
+
 
         try {
             date = inputDateFormat.parse(task.getDate());
@@ -127,7 +142,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         dialog.show();
     }
 
-
+    //TODO: try to move helper class
     private void deleteTaskFromId(int taskId, int position) {
         class GetSavedTasks extends AsyncTask<Void, Void, List<Task>> {
             @Override
@@ -179,6 +194,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         ImageView options;
         @BindView(R.id.time)
         TextView time;
+        @BindView(R.id.period)
+        TextView period;
 
         TaskViewHolder(@NonNull View view) {
             super(view);

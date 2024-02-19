@@ -78,5 +78,7 @@ dependencies {
     }
 
     implementation 'com.applandeo:material-calendar-view:1.7.0'
+    // Swipe Button
+    implementation 'com.ebanx:swipe-button:0.8.3'
 
 }
