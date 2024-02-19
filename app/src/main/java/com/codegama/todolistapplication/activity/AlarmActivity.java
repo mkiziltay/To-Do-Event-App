@@ -169,6 +169,7 @@ public class AlarmActivity extends BaseActivity {
         alarmIntent.putExtra("DATE", date );
         alarmIntent.putExtra("TIME", time );
         alarmIntent.putExtra("PER", period );
+        alarmIntent.putExtra("IMP", importance );
         pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), req_id, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             alarmManager.setAndAllowWhileIdle (AlarmManager.RTC_WAKEUP, cal.getTimeInMillis()+timeVal*55*1000,  pendingIntent);
@@ -184,7 +185,6 @@ public class AlarmActivity extends BaseActivity {
 
     protected void startMediaPlayer(){
         //TODO: edit this if block
-        Log.i("alarming", importance );
         if (importance.equals("High")){
             mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.notification_high);
             mediaPlayer.start();
